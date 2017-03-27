@@ -1,0 +1,158 @@
+* {
+	box-sizing:  border-box;
+}
+
+html {
+	font-size: 62.5%;
+}
+
+body {
+	background-color: #454545;
+	color: white;
+	font-family: 'Gloria Hallelujah', cursive;
+}
+
+/*
+	MODAL WINDOWS
+*/
+
+.win-modal,
+.num-players-modal,
+.symbol-modal {
+	position: absolute;
+	height: 500px;
+	width: 500px;
+	left: calc(50% - 250px);
+	top: 210px;
+	text-align: center;
+	border-radius: 9px;
+	display: none;
+}
+
+.win-modal {
+	background-color: rgba(245, 249, 233, .3);
+}
+
+.win-modal p,
+.win-modal button {
+	position: relative;
+	top: 170px;
+}
+
+.win-modal p {
+	color: black;
+	font-size: 5rem;
+}
+
+.declare-winner {
+	text-decoration: underline;
+	font-size: 6rem;
+}
+
+.win-modal button,
+.num-players-modal button,
+.symbol-modal button {
+	color: white;
+	background-color: #3066BE;
+	font-size: 1.4rem;
+	font-weight: bold;
+	border: none;
+	border-radius: 5px;
+	padding: 1rem 1.5rem;
+	margin: 50px 15px 0;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.num-players-modal,
+.symbol-modal {
+	background-color: #454545;
+}
+
+.num-players-modal p {
+	margin-bottom: 30px;
+	font-size: 5rem;
+}
+
+.symbol-modal p {
+	font-size: 5rem;
+}
+
+.show-modal {
+	display: block;
+}
+
+
+/*
+	MAIN WINDOW
+*/
+
+.main-header-container {
+	padding: 4rem 0;
+	text-align: center;
+}
+
+.main-header {
+	font-size: 6rem;
+	padding-bottom: 2rem;
+	display: inline-block;
+	border-bottom: 3px solid white;
+	
+}
+
+.board-container {
+	margin-top: 4rem;
+	width: 452px;
+	margin: 5rem auto 0;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-flow: row wrap;
+	    flex-flow: row wrap;
+}
+
+.board-box {
+	width: 150px;
+	height: 150px;
+	font-size: 10rem;
+	line-height: 150px;
+	text-align: center;
+	color: #CCEAF4;
+}
+
+.board-box:nth-child(3n-2),
+.board-box:nth-child(3n-1){
+	border-right: 2px solid white;
+}
+
+.board-box:nth-child(-1n + 6) {
+	border-bottom: 2px solid white;
+}
+
+.scoreboard-container {
+	width: 452px;
+	margin: 5rem auto 0;
+	padding-top: 2rem;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	border-top: 2px solid white;
+	margin-bottom: 2rem;
+}
+
+.sb-box {
+	width: 33.3333333%;
+	text-align: center;
+}
+
+.sb-title {
+	font-size: 2.6rem;
+	margin-bottom: 2rem;
+}
+
+.sb-score {
+	font-size: 3rem
+}
