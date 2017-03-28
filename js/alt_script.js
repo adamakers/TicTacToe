@@ -2,6 +2,17 @@
 
   "use strict";
 
+//=====================
+//VARIABLES
+//=====================
+
+let mainGame;
+
+
+
+//=====================
+//OBJECT CONSTRUCTION
+//=====================
 //GameState constructor
   function GameState(xMoves, oMoves) {
     this.xMoves = xMoves;
@@ -10,12 +21,12 @@
   }
 
   GameState.prototype.pushMoveToArr = function(move) {
-    let player = this.playerTurn();
-    //move = move;
+    let player = this.playerTurnArr();
     this[player].push(move);
   };
 
-  GameState.prototype.reset = function() {
+//no need for this reset if you can just reassign mainGame to new GameState([], [])game?
+  GameState.prototype.resetGame = function() {
     this.xMoves = [];
     this.oMoves = [];
     this.numMoves = 0;
@@ -34,18 +45,21 @@
     });
   };
 
-  GameState.prototype.playerTurn = function() {;
-    if (this.numMoves % 2 === 0) {
-      return 'xMoves';
-    } else {
-      return 'oMoves';
-    }
+  GameState.prototype.playerTurnArr = function() {
+    return this.numMoves % 2 === 0 ? 'xMoves' : 'oMoves';
   };
 
+  GameState.prototype.playerTurnSymbol = function() {
+    return this.numMoves % 2 === 0 ? 'X' : 'O';
+  }
+
+
+  //=====================
   //HELPER FUNCTIONS
+  //=====================
   function drawSymbol(item, turn) {
-    let symbol = mainGame.playerTurn() === 'oMoves' ? 'O' : 'X';
-    item.innerHTML = symbol;
+    let symbol = mainGame.playerTurnSymbol();
+    item.textContent = symbol;
   }
 
   //checks to see if number chosen
@@ -54,46 +68,67 @@
   }
 
   function resetGameButton() {
+    clearTiles();
+    mainGame.resetGame();
+    closeModal();
   }
 
+  //=====================
   //MODAL FUNCTIONS
-  function showErrorTaken(item) {
-    const errorModal = document.querySelector('.error-picked-modal');
-    errorModal.classList.add('show-modal');
-    var modalTimeout = window.setTimeout(function(){
-      errorModal.classList.remove('show-modal');
-    }, 1000);
-  }
+  //=====================
+
+  
 
   function showPlayerWin(winner) {
     const winModal = document.querySelector('.player-win-modal');
-    const winModalCont = document.querySelector('.player-win-modal .modal-content-container');
+    const gameWinner = document.querySelector('.game-winner');
     const resetBtn = document.querySelector('.reset-btn');
-    let htmlString = '<h3>Player ' + winner + ' has won!</h3>';
-    winModalCont.insertAdjacentHTML('afterbegin', htmlString);
+    gameWinner.textContent = 'df'
     winModal.classList.add('show-modal');
+  }
+
+  function closeModal() {
+    let modals = document.querySelectorAll('.modal');
+    modals.forEach(function(modal){
+      modal.classList.remove('show-modal');
+    });
+  }
+
+  function clearTiles() {
+    let tiles = document.querySelectorAll('.board-box');
+    tiles.forEach(function(tile){
+      tile.innerHTML = '';
+    });
   }
 
   
 
 
+  //=====================
   //EVENT HANDLERS
+  //=====================
+  
+  //********* THIS ACCEPTABLE? *********
+  function init() {
+    const startModal = document.querySelector('.player-num-modal');
+    startModal.classList.add('show-modal');
+    mainGame = new GameState([], []);
+  }
+
+  
   //draws symbol in box
-  //push chosen num to array
-  function clickHandler(item) {
-    var boxNum = Number(item.dataset.box);
+  function clickTileHandler(item) {
+    let boxNum = Number(item.dataset.box);
     if (!hasNumBeenPicked(boxNum)) {
-      let player = mainGame.playerTurn()
-      let symbol = player === 'oMoves' ? 'O' : 'X';
+      let player = mainGame.playerTurnArr()
+      let symbol = mainGame.playerTurnSymbol();
       drawSymbol(item);
       mainGame.pushMoveToArr(boxNum);
       //if game winner
       if(mainGame.checkWin(player)){
-        showPlayerWin(symbol)
+        showPlayerWin(symbol);
       }
       mainGame.numMoves++;
-    } else {
-      showErrorTaken();
     }
   }
 
@@ -102,19 +137,18 @@
   //  EVENT LISTENERS
   // ***************
 
+  window.onload = init;
+
   const resetButton = document.querySelector('.reset-btn');
   const gameBoard = document.querySelector('.board-container');
   const gameTiles = gameBoard.querySelectorAll('.board-box');
 
+  resetButton.addEventListener('click', resetGameButton);
+
   gameTiles.forEach(function(tile){
     tile.addEventListener('click', function(){
-      clickHandler(this);
+      clickTileHandler(this);
     });
   });
-
-  resetButton.addEventListener('click', resetGameButton);  
-
-
-  let mainGame = new GameState([], []);
 
 })();

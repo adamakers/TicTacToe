@@ -13,15 +13,26 @@
 
 	<section class="container">
 
-		<div class="error-picked-modal modal">
+		<div class="player-num-modal modal">
 			<div class="modal-content-container">
-				<h3>Tile has already been selected!</h3>
+				<h3>How many players?</h3>
+				<button class="one-player btn">One</button>
+				<button class="two-player btn">Two</button>
+			</div>
+		</div>
+
+		<div class="player-symbol-modal modal">
+			<div class="modal-content-container">
+				<h3>Choose your weapon</h3>
+				<button class="chose-x btn">X</button>
+				<button class="chose-o btn">O</button>
 			</div>
 		</div>
 
 		<div class="player-win-modal modal">
 			<div class="modal-content-container">
-				<button class="reset-btn">Play Again</button>
+				<h3>Player <span class="game-winner">X</span> has won!</h3>
+				<button class="reset-btn btn">Play Again</button>
 			</div>
 		</div>
 

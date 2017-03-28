@@ -25,10 +25,8 @@ body {
 	text-align: center;
 	border-radius: 9px;
 	display: none;
-}
-
-.player-win-modal {
-	background-color: green;
+	background-color: rgba(69,69,69,0.9);
+	border: 2px solid white;
 }
 
 .modal-content-container {
@@ -40,8 +38,26 @@ body {
 
 .modal h3 {
 	font-size: 5rem;
+	margin-bottom: 5rem;
 }
 
+.btn {
+	background-color: transparent;
+	color: white;
+	border: 3px solid white;
+	padding: 1rem 1.5rem;
+	border-radius: 5px;
+	font-size: 2rem;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+.btn:focus,
+.btn:hover,
+.btn:active {
+	background-color: white;
+	color: #222;
+}
 
 .error-picked-modal {
 	background-color: red;
