@@ -11,7 +11,7 @@
 
   GameState.prototype.pushMoveToArr = function(move) {
     let player = this.playerTurn();
-    move = move;
+    //move = move;
     this[player].push(move);
   };
 
@@ -24,9 +24,9 @@
   GameState.prototype.checkWin = function(player) {
     let playerMoves = this[player];
     let winningArrays = [ [1,2,3], [4,5,6],
-                      [7,8,9], [1,4,7],
-                      [2,5,8], [3,6,9],
-                      [1,5,9], [3,5,7] ];
+                          [7,8,9], [1,4,7],
+                          [2,5,8], [3,6,9],
+                          [1,5,9], [3,5,7] ];
     return winningArrays.some(function(winArray){
       return winArray.every(function(winMove){
         return playerMoves.includes(winMove);
@@ -42,9 +42,6 @@
     }
   };
 
-  // VARIABLES
-  let mainGame = new GameState([], []);
-
   //HELPER FUNCTIONS
   function drawSymbol(item, turn) {
     let symbol = mainGame.playerTurn() === 'oMoves' ? 'O' : 'X';
@@ -57,15 +54,10 @@
   }
 
   function resetGameButton() {
-    const board = document.querySelectorAll('.board-container');
-    mainGame.reset();
-    board.forEach(function(tile){
-      tile.innerHTML = '';
-    })
   }
 
   //MODAL FUNCTIONS
-  function drawErrorTaken(item) {
+  function showErrorTaken(item) {
     const errorModal = document.querySelector('.error-picked-modal');
     errorModal.classList.add('show-modal');
     var modalTimeout = window.setTimeout(function(){
@@ -73,12 +65,11 @@
     }, 1000);
   }
 
-  function drawPlayerWin(winner) {
+  function showPlayerWin(winner) {
     const winModal = document.querySelector('.player-win-modal');
     const winModalCont = document.querySelector('.player-win-modal .modal-content-container');
     const resetBtn = document.querySelector('.reset-btn');
     let htmlString = '<h3>Player ' + winner + ' has won!</h3>';
-    htmlString += '<button class="reset-btn">Play Again</button>';
     winModalCont.insertAdjacentHTML('afterbegin', htmlString);
     winModal.classList.add('show-modal');
   }
@@ -98,11 +89,11 @@
       mainGame.pushMoveToArr(boxNum);
       //if game winner
       if(mainGame.checkWin(player)){
-        drawPlayerWin(symbol)
+        showPlayerWin(symbol)
       }
       mainGame.numMoves++;
     } else {
-      drawErrorTaken();
+      showErrorTaken();
     }
   }
 
@@ -111,8 +102,9 @@
   //  EVENT LISTENERS
   // ***************
 
-  var gameBoard = document.querySelector('.board-container');
-  var gameTiles = gameBoard.querySelectorAll('.board-box');
+  const resetButton = document.querySelector('.reset-btn');
+  const gameBoard = document.querySelector('.board-container');
+  const gameTiles = gameBoard.querySelectorAll('.board-box');
 
   gameTiles.forEach(function(tile){
     tile.addEventListener('click', function(){
@@ -120,6 +112,9 @@
     });
   });
 
-  .
+  resetButton.addEventListener('click', resetGameButton);  
+
+
+  let mainGame = new GameState([], []);
 
 })();
