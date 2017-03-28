@@ -16,9 +16,7 @@ body {
 	MODAL WINDOWS
 */
 
-.win-modal,
-.num-players-modal,
-.symbol-modal {
+.modal {
 	position: absolute;
 	height: 500px;
 	width: 500px;
@@ -29,53 +27,25 @@ body {
 	display: none;
 }
 
-.win-modal {
-	background-color: rgba(245, 249, 233, .3);
+.player-win-modal {
+	background-color: green;
 }
 
-.win-modal p,
-.win-modal button {
-	position: relative;
-	top: 170px;
+.modal-content-container {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
 }
 
-.win-modal p {
-	color: black;
+.modal h3 {
 	font-size: 5rem;
 }
 
-.declare-winner {
-	text-decoration: underline;
-	font-size: 6rem;
-}
 
-.win-modal button,
-.num-players-modal button,
-.symbol-modal button {
+.error-picked-modal {
+	background-color: red;
 	color: white;
-	background-color: #3066BE;
-	font-size: 1.4rem;
-	font-weight: bold;
-	border: none;
-	border-radius: 5px;
-	padding: 1rem 1.5rem;
-	margin: 50px 15px 0;
-	display: inline-block;
-	cursor: pointer;
-}
-
-.num-players-modal,
-.symbol-modal {
-	background-color: #454545;
-}
-
-.num-players-modal p {
-	margin-bottom: 30px;
-	font-size: 5rem;
-}
-
-.symbol-modal p {
-	font-size: 5rem;
 }
 
 .show-modal {

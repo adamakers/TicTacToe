@@ -51,13 +51,36 @@
     item.innerHTML = symbol;
   }
 
-  function drawErrorTaken(item) {
-    let symbol = m
-  }
-
   //checks to see if number chosen
   function hasNumBeenPicked(pick) {
     return mainGame.xMoves.includes(pick) || mainGame.oMoves.includes(pick);
+  }
+
+  function resetGameButton() {
+    const board = document.querySelectorAll('.board-container');
+    mainGame.reset();
+    board.forEach(function(tile){
+      tile.innerHTML = '';
+    })
+  }
+
+  //MODAL FUNCTIONS
+  function drawErrorTaken(item) {
+    const errorModal = document.querySelector('.error-picked-modal');
+    errorModal.classList.add('show-modal');
+    var modalTimeout = window.setTimeout(function(){
+      errorModal.classList.remove('show-modal');
+    }, 1000);
+  }
+
+  function drawPlayerWin(winner) {
+    const winModal = document.querySelector('.player-win-modal');
+    const winModalCont = document.querySelector('.player-win-modal .modal-content-container');
+    const resetBtn = document.querySelector('.reset-btn');
+    let htmlString = '<h3>Player ' + winner + ' has won!</h3>';
+    htmlString += '<button class="reset-btn">Play Again</button>';
+    winModalCont.insertAdjacentHTML('afterbegin', htmlString);
+    winModal.classList.add('show-modal');
   }
 
   
@@ -69,13 +92,17 @@
   function clickHandler(item) {
     var boxNum = Number(item.dataset.box);
     if (!hasNumBeenPicked(boxNum)) {
-      let symbol = mainGame.playerTurn() === 'oMoves' ? 'O' : 'X';
+      let player = mainGame.playerTurn()
+      let symbol = player === 'oMoves' ? 'O' : 'X';
       drawSymbol(item);
       mainGame.pushMoveToArr(boxNum);
-      if(mainGame.checkWin(mainGame.playerTurn())){
-        console.log('WINNER');
+      //if game winner
+      if(mainGame.checkWin(player)){
+        drawPlayerWin(symbol)
       }
       mainGame.numMoves++;
+    } else {
+      drawErrorTaken();
     }
   }
 
@@ -92,5 +119,7 @@
       clickHandler(this);
     });
   });
+
+  .
 
 })();
