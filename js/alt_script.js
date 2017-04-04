@@ -8,8 +8,6 @@
 
 let mainGame;
 
-
-
 //=====================
 //OBJECT CONSTRUCTION
 //=====================
@@ -53,7 +51,6 @@ let mainGame;
     return this.numMoves % 2 === 0 ? 'X' : 'O';
   }
 
-
   //=====================
   //HELPER FUNCTIONS
   //=====================
@@ -77,14 +74,36 @@ let mainGame;
   //MODAL FUNCTIONS
   //=====================
 
-  
+  function showStartModal() {
+    const startModal = document.querySelector('.player-num-modal');
+    const onePlyrButton = document.querySelector('.one-player-btn');
+    const twoPlyrButton = document.querySelector('.two-player-btn');
+    const playerNumBtn = document.querySelectorAll('.player-num-btn');
+    startModal.classList.add('show-modal');
+
+    playerNumBtn.forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        let target = e.target;
+        let btnClasses = target.classList;
+        let playerOne = 'one-player-btn';
+        let playerTwo = 'two-player-btn';
+        if (btnClasses.contains(playerOne)) {
+          onePlayerGame();
+        } else {
+          twoPlayerGame();
+        }
+        closeModal();
+      });
+    });
+  }
 
   function showPlayerWin(winner) {
     const winModal = document.querySelector('.player-win-modal');
     const gameWinner = document.querySelector('.game-winner');
     const resetBtn = document.querySelector('.reset-btn');
-    gameWinner.textContent = 'df'
+    gameWinner.textContent = mainGame.playerTurnSymbol();
     winModal.classList.add('show-modal');
+    resetBtn.addEventListener('click', resetGameButton);
   }
 
   function closeModal() {
@@ -101,8 +120,24 @@ let mainGame;
     });
   }
 
-  
 
+  //=====================
+  //GAME MODE LOGIC
+  //=====================
+  function onePlayerGame() {
+    //DO SOME AI STUFF
+    console.log('ONE PLAYER');
+  }
+
+  function twoPlayerGame() {
+    const gameBoard = document.querySelector('.board-container');
+    const gameTiles = gameBoard.querySelectorAll('.board-box');
+    gameTiles.forEach(function(tile){
+      tile.addEventListener('click', function(){
+        clickTileHandler(this);
+      });
+    });
+  }
 
   //=====================
   //EVENT HANDLERS
@@ -110,11 +145,9 @@ let mainGame;
   
   //********* THIS ACCEPTABLE? *********
   function init() {
-    const startModal = document.querySelector('.player-num-modal');
-    startModal.classList.add('show-modal');
     mainGame = new GameState([], []);
+    showStartModal();
   }
-
   
   //draws symbol in box
   function clickTileHandler(item) {
@@ -139,16 +172,9 @@ let mainGame;
 
   window.onload = init;
 
-  const resetButton = document.querySelector('.reset-btn');
-  const gameBoard = document.querySelector('.board-container');
-  const gameTiles = gameBoard.querySelectorAll('.board-box');
+  
+  
 
-  resetButton.addEventListener('click', resetGameButton);
 
-  gameTiles.forEach(function(tile){
-    tile.addEventListener('click', function(){
-      clickTileHandler(this);
-    });
-  });
 
 })();
