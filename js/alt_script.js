@@ -19,9 +19,19 @@ let mainGame;
   }
 
   GameState.prototype.pushMoveToArr = function(move) {
-    let player = this.playerTurnArr();
+    let player = this.playerTurnStr();
     this[player].push(move);
   };
+
+  //NEEDS CHECK
+  GameState.prototype.findAvailableTiles() {
+    let x = this.xMoves;
+    let o = this.oMoves;
+    let combined = x.concat(o);
+    return combined.map(function(move){
+      return !combined.includes(move);
+    });
+  }
 
 //no need for this reset if you can just reassign mainGame to new GameState([], [])game?
   GameState.prototype.resetGame = function() {
@@ -35,7 +45,7 @@ let mainGame;
     let winningArrays = [ [1,2,3], [4,5,6],
                           [7,8,9], [1,4,7],
                           [2,5,8], [3,6,9],
-                          [1,5,9], [3,5,7] ];
+                          [1,5,9], [3,5,7]];
     return winningArrays.some(function(winArray){
       return winArray.every(function(winMove){
         return playerMoves.includes(winMove);
@@ -43,13 +53,24 @@ let mainGame;
     });
   };
 
-  GameState.prototype.playerTurnArr = function() {
+  GameState.prototype.isGameOver = function() {
+    if (checkWin(this.xMove) ||
+        checkWin(this.oMove) ||
+        this.numMoves >= 9 ) {
+      return true;
+    }
+    return false;
+  }
+
+  GameState.prototype.scoreOfGame
+
+  GameState.prototype.playerTurnStr = function() {
     return this.numMoves % 2 === 0 ? 'xMoves' : 'oMoves';
   };
 
   GameState.prototype.playerTurnSymbol = function() {
     return this.numMoves % 2 === 0 ? 'X' : 'O';
-  }
+  };
 
   //=====================
   //HELPER FUNCTIONS
@@ -74,26 +95,13 @@ let mainGame;
   //MODAL FUNCTIONS
   //=====================
 
+
   function showStartModal() {
     const startModal = document.querySelector('.player-num-modal');
-    const onePlyrButton = document.querySelector('.one-player-btn');
-    const twoPlyrButton = document.querySelector('.two-player-btn');
     const playerNumBtn = document.querySelectorAll('.player-num-btn');
     startModal.classList.add('show-modal');
-
     playerNumBtn.forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        let target = e.target;
-        let btnClasses = target.classList;
-        let playerOne = 'one-player-btn';
-        let playerTwo = 'two-player-btn';
-        if (btnClasses.contains(playerOne)) {
-          onePlayerGame();
-        } else {
-          twoPlayerGame();
-        }
-        closeModal();
-      });
+      btn.addEventListener('click', playerModeHandler);
     });
   }
 
@@ -124,9 +132,11 @@ let mainGame;
   //=====================
   //GAME MODE LOGIC
   //=====================
-  function onePlayerGame() {
+  function onePlayerGame(game) {
     //DO SOME AI STUFF
-    console.log('ONE PLAYER');
+    if (/* AI Move */) {
+      if ()
+    }
   }
 
   function twoPlayerGame() {
@@ -135,14 +145,25 @@ let mainGame;
     gameTiles.forEach(function(tile){
       tile.addEventListener('click', function(){
         clickTileHandler(this);
+        console.log()
       });
     });
+  }
+
+  function marvinTheAI(game) {
+    if (game.checkWin()) {
+      return 1;
+    } else if (game.checkWin()) {
+      return -1;
+    }
+
+
   }
 
   //=====================
   //EVENT HANDLERS
   //=====================
-  
+
   //********* THIS ACCEPTABLE? *********
   function init() {
     mainGame = new GameState([], []);
@@ -153,7 +174,7 @@ let mainGame;
   function clickTileHandler(item) {
     let boxNum = Number(item.dataset.box);
     if (!hasNumBeenPicked(boxNum)) {
-      let player = mainGame.playerTurnArr()
+      let player = mainGame.playerTurnStr()
       let symbol = mainGame.playerTurnSymbol();
       drawSymbol(item);
       mainGame.pushMoveToArr(boxNum);
@@ -163,6 +184,21 @@ let mainGame;
       }
       mainGame.numMoves++;
     }
+  }
+
+  //On start modal, check if game is 1 player or 2;
+  function playerModeHandler(e) {
+    let target = e.target;
+    let btnClasses = target.classList;
+    let playerOne = 'one-player-btn';
+    let playerTwo = 'two-player-btn';
+    if (btnClasses.contains(playerOne)) {
+      onePlayerGame();
+    } else {
+      twoPlayerGame();
+    }
+    //btn.removeEventListener('click', playerMideHandler);
+    closeModal();
   }
 
 
