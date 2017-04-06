@@ -7,6 +7,8 @@
 //=====================
 
 let mainGame;
+const gameBoard = document.querySelector('.board-container');
+const gameTiles = gameBoard.querySelectorAll('.board-box');
 
 //=====================
 //OBJECT CONSTRUCTION
@@ -16,6 +18,8 @@ let mainGame;
     this.xMoves = xMoves;
     this.oMoves = oMoves;
     this.numMoves = 0;
+    this.playerSymbol;
+    this.twoPlayer = false;
   }
 
   GameState.prototype.pushMoveToArr = function(move) {
@@ -24,11 +28,12 @@ let mainGame;
   };
 
   //NEEDS CHECK
-  GameState.prototype.findAvailableTiles() {
+  GameState.prototype.findAvailableTiles = function() {
+    const boardMoves = [1,2,3,4,5,6,7,8,9];
     let x = this.xMoves;
     let o = this.oMoves;
     let combined = x.concat(o);
-    return combined.map(function(move){
+    return boardMoves.filter(function(move){
       return !combined.includes(move);
     });
   }
@@ -54,15 +59,17 @@ let mainGame;
   };
 
   GameState.prototype.isGameOver = function() {
-    if (checkWin(this.xMove) ||
-        checkWin(this.oMove) ||
+    if (this.checkWin('xMoves') ||
+        this.checkWin('oMoves') ||
         this.numMoves >= 9 ) {
       return true;
     }
     return false;
   }
 
-  GameState.prototype.scoreOfGame
+  GameState.prototype.scoreOfGame = function() {
+    //need to figure out how to reference when ai turn or human turn.
+  }
 
   GameState.prototype.playerTurnStr = function() {
     return this.numMoves % 2 === 0 ? 'xMoves' : 'oMoves';
@@ -75,7 +82,7 @@ let mainGame;
   //=====================
   //HELPER FUNCTIONS
   //=====================
-  function drawSymbol(item, turn) {
+  function drawSymbol(item) {
     let symbol = mainGame.playerTurnSymbol();
     item.textContent = symbol;
   }
@@ -105,6 +112,24 @@ let mainGame;
     });
   }
 
+  function showPickSymbolModal() {
+    const pickModal = document.querySelector('.player-symbol-modal');
+    const chooseX = document.querySelector('.chose-x');
+    const chooseO = document.querySelector('.chose-o');
+    pickModal.classList.add('show-modal');
+    chooseX.addEventListener('click', function(){
+      mainGame.playerSymbol = 'x';
+      closeModal();
+      onePlayerGame();
+    });
+    chooseO.addEventListener('click', function(){
+      mainGame.playerSymbol = 'o';
+      closeModal();
+      onePlayerGame();
+    });
+    
+  }
+
   function showPlayerWin(winner) {
     const winModal = document.querySelector('.player-win-modal');
     const gameWinner = document.querySelector('.game-winner');
@@ -128,37 +153,75 @@ let mainGame;
     });
   }
 
+  function testMarv() {
+    let newTiles = mainGame.findAvailableTiles();
+    let newTile = newTiles[0];
+    let player = mainGame.playerTurnStr();
+    let tileEl = document.querySelector('[data-box="' + newTile + '"]');
+    drawSymbol(tileEl);
+    mainGame.pushMoveToArr(newTile);
+    mainGame.numMoves++;
+    if (mainGame.checkWin(player)){
+      showPlayerWin(symbol);
+    }
+  }
 
   //=====================
   //GAME MODE LOGIC
   //=====================
   function onePlayerGame(game) {
-    //DO SOME AI STUFF
-    if (/* AI Move */) {
-      if ()
+    //if (computer is x) {
+      //run marvin
+      //gameTiles.forEach(function(tile) {
+      //addeventlistener for each tile, tileClickHandler
+    if (mainGame.playerSymbol === 'o') {
+      //run marvinTheAI
+      return testMarv();
+    } else {
+      gameTiles.forEach(function(tile) {
+        tile.addEventListener('click', function(){
+          tileClickHandler(this);
+        });
+      });
     }
   }
 
   function twoPlayerGame() {
-    const gameBoard = document.querySelector('.board-container');
-    const gameTiles = gameBoard.querySelectorAll('.board-box');
-    gameTiles.forEach(function(tile){
+    gameTiles.forEach(function(tile) {
       tile.addEventListener('click', function(){
-        clickTileHandler(this);
-        console.log()
+        tileClickHandler(this);
       });
     });
   }
 
-  function marvinTheAI(game) {
-    if (game.checkWin()) {
-      return 1;
-    } else if (game.checkWin()) {
-      return -1;
-    }
+  // function marvinTheAI(game) {
+  //   //game.isGameOver() need a parameter
+  //   if (game.isGameOver()) {
+  //     //return score()
+  //     console.log('game is over, need to create score() function to determine score of game');
+  //   }
+  //   let scores = []; //array of scores.  marvinTheAI() will be pushed here.
+  //   let moves = []; //push the move corresponding with the scores array.
 
+  //   //get available moves
+  //   let availableMoves = game.findAvailableTiles();
+  //   availableMoves.forEach(function(move){
+  //     let tempGame = new GameState(game.xMoves, oMoves);
+  //     tempGame.pushMoveToArr(move);
+  //     tempGame.numMoves++;
+  //     scores.push(marvinTheAI(tempGame));
+  //     moves.push(move);
+  //   });
 
-  }
+  //   //if it is the players turn
+  //     //index_of_max_score = index of max score in scores array
+  //     //the choice of the player should be moves[index_of_max_score]
+  //     //return scores[index_of_max_score]
+  //   //else if it is the other player
+  //     //index_of_max_score = index of max score in scores array
+  //     //the choice of the player should be moves[index_of_max_score]
+  //     //return scores[index_of_max_score]
+  // }
 
   //=====================
   //EVENT HANDLERS
@@ -171,7 +234,7 @@ let mainGame;
   }
   
   //draws symbol in box
-  function clickTileHandler(item) {
+  function tileClickHandler(item) {
     let boxNum = Number(item.dataset.box);
     if (!hasNumBeenPicked(boxNum)) {
       let player = mainGame.playerTurnStr()
@@ -184,6 +247,9 @@ let mainGame;
       }
       mainGame.numMoves++;
     }
+    if (!mainGame.twoPlayer) {
+      testMarv();
+    }
   }
 
   //On start modal, check if game is 1 player or 2;
@@ -192,13 +258,14 @@ let mainGame;
     let btnClasses = target.classList;
     let playerOne = 'one-player-btn';
     let playerTwo = 'two-player-btn';
+    closeModal();
     if (btnClasses.contains(playerOne)) {
-      onePlayerGame();
+      showPickSymbolModal();
     } else {
+      mainGame.twoPlayer = true;
       twoPlayerGame();
     }
     //btn.removeEventListener('click', playerMideHandler);
-    closeModal();
   }
 
 
@@ -207,10 +274,6 @@ let mainGame;
   // ***************
 
   window.onload = init;
-
-  
-  
-
 
 
 })();
