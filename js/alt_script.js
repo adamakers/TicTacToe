@@ -160,30 +160,27 @@ const gameTiles = gameBoard.querySelectorAll('.board-box');
     let tileEl = document.querySelector('[data-box="' + newTile + '"]');
     drawSymbol(tileEl);
     mainGame.pushMoveToArr(newTile);
-    mainGame.numMoves++;
     if (mainGame.checkWin(player)){
-      showPlayerWin(symbol);
+      showPlayerWin(mainGame.playerTurnSymbol());
     }
+    mainGame.numMoves++;
   }
 
   //=====================
   //GAME MODE LOGIC
   //=====================
   function onePlayerGame(game) {
-    //if (computer is x) {
+    if (mainGame.playerSymbol === 'o') {
       //run marvin
       //gameTiles.forEach(function(tile) {
       //addeventlistener for each tile, tileClickHandler
-    if (mainGame.playerSymbol === 'o') {
-      //run marvinTheAI
-      return testMarv();
-    } else {
-      gameTiles.forEach(function(tile) {
-        tile.addEventListener('click', function(){
-          tileClickHandler(this);
-        });
-      });
+      testMarv();
     }
+    gameTiles.forEach(function(tile) {
+      tile.addEventListener('click', function(){
+        tileClickHandler(this);
+      });
+    });
   }
 
   function twoPlayerGame() {
@@ -244,6 +241,7 @@ const gameTiles = gameBoard.querySelectorAll('.board-box');
       //if game winner
       if(mainGame.checkWin(player)){
         showPlayerWin(symbol);
+        return;
       }
       mainGame.numMoves++;
     }
