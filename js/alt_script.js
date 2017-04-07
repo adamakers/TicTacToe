@@ -79,17 +79,17 @@ const gameTiles = gameBoard.querySelectorAll('.board-box');
     return this.numMoves % 2 === 0 ? 'X' : 'O';
   };
 
+    //checks to see if number chosen
+  GameState.prototype.hasNumBeenPicked = function(pick) {
+    return mainGame.xMoves.includes(pick) || mainGame.oMoves.includes(pick);
+  }
+
   //=====================
   //HELPER FUNCTIONS
   //=====================
   function drawSymbol(item) {
     let symbol = mainGame.playerTurnSymbol();
     item.textContent = symbol;
-  }
-
-  //checks to see if number chosen
-  function hasNumBeenPicked(pick) {
-    return mainGame.xMoves.includes(pick) || mainGame.oMoves.includes(pick);
   }
 
   function resetGameButton() {
@@ -224,7 +224,6 @@ const gameTiles = gameBoard.querySelectorAll('.board-box');
   //EVENT HANDLERS
   //=====================
 
-  //********* THIS ACCEPTABLE? *********
   function init() {
     mainGame = new GameState([], []);
     showStartModal();
@@ -233,18 +232,19 @@ const gameTiles = gameBoard.querySelectorAll('.board-box');
   //draws symbol in box
   function tileClickHandler(item) {
     let boxNum = Number(item.dataset.box);
-    if (!hasNumBeenPicked(boxNum)) {
-      let player = mainGame.playerTurnStr()
-      let symbol = mainGame.playerTurnSymbol();
-      drawSymbol(item);
-      mainGame.pushMoveToArr(boxNum);
-      //if game winner
-      if(mainGame.checkWin(player)){
-        showPlayerWin(symbol);
-        return;
-      }
-      mainGame.numMoves++;
+    if (mainGame.hasNumBeenPicked(boxNum)) return;
+
+    let player = mainGame.playerTurnStr()
+    let symbol = mainGame.playerTurnSymbol();
+    drawSymbol(item);
+    mainGame.pushMoveToArr(boxNum);
+    //if game winner
+    if(mainGame.checkWin(player)){
+      showPlayerWin(symbol);
+      return;
     }
+    
+    mainGame.numMoves++;
     if (!mainGame.twoPlayer) {
       testMarv();
     }
